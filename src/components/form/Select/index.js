@@ -1,4 +1,4 @@
-import React, { createRef, useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import styles from "./styles.module.css";
 
 export function Option({ value, label, selected, onSelect }) {
@@ -27,8 +27,9 @@ export function Option({ value, label, selected, onSelect }) {
 
 export default function SelectGenre({
   label,
-  value,
   placeholder,
+  name,
+  value,
   options = [],
 }) {
   // State
@@ -47,6 +48,26 @@ export default function SelectGenre({
       }
     };
 
+  useEffect(() => {
+    // Map values
+    let selected = [];
+    if (Array.isArray(value) && Array.isArray(options)) {
+      options.forEach((option) => {
+        if (typeof option === "string") {
+          selected = value;
+        } else {
+          // option is an object
+          value.forEach((item) => {
+            if (option?.value === item) {
+              selected.push(option?.value);
+            }
+          });
+        }
+      });
+      setSelectedOptions(selected);
+    }
+  }, [options, value]);
+
   const selectOption = (value) => {
     if (selectedOptions.includes(value)) {
       setSelectedOptions(selectedOptions.filter((option) => option !== value));
@@ -56,7 +77,7 @@ export default function SelectGenre({
   };
 
   return (
-    <div className="relative">
+    <div className="relative" data-testid="select-testid">
       {label && <label>{label}</label>}
       <div className="relative">
         <div

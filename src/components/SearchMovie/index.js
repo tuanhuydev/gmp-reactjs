@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./styles.module.css";
 
-export default function SearchMovie({ value, onChange, onSearch }) {
+export default function SearchMovie({ value, onChange, onSearch, placeholder }) {
 
   const handleSearch = (event) => {
     const value = event.target.value || "";
@@ -15,7 +15,7 @@ export default function SearchMovie({ value, onChange, onSearch }) {
         className="grow input mr-1"
         defaultValue={value}
         id="search-input"
-        placeholder="What do you want to watch ?"
+        placeholder={placeholder}
         onChange={handleSearch}
       />
       <button id="search-btn" type="submit" className={`upper text-light ${styles.submit}`}>search</button>

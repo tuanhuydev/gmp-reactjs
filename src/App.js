@@ -5,6 +5,7 @@ import Select from "./components/form/Select";
 
 function App() {
   const [search, setSearch] = useState("");
+  const [genre, setGenre] = useState(['crime']);
 
   const genreOptions = [
     { label: "Crime", value: "crime" },
@@ -18,6 +19,10 @@ function App() {
     console.log("Submit Search Form");
   };
 
+  const handleChangeGenre = (value) => {
+    setGenre(value);
+  };
+
   return (
     <div>
       <div className="mb-1">
@@ -26,11 +31,12 @@ function App() {
       <div className="mb-1">
         <SearchMovie
           value={search}
+          placeholder="What do you want to watch ?"
           onChange={setSearch}
           onSearch={handleSearch}
         />
       </div>
-      <Select options={genreOptions} placeholder="Please select genre" selectedValue={'Crime'} />
+      <Select options={genreOptions} onChange={handleChangeGenre} placeholder="Please select genre" value={genre} />
     </div>
   );
 }
