@@ -1,23 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import Counter from "./components/Counter";
+import SearchMovie from "./components/SearchMovie";
+import Select from "./components/form/Select";
 
 function App() {
+  const [search, setSearch] = useState("");
+
+  const genreOptions = [
+    { label: "Crime", value: "crime" },
+    { label: "Documentary", value: "documentary" },
+    { label: "Horror", value: "horror" },
+    { label: "Comedy", value: "comedy" },
+  ];
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+    console.log("Submit Search Form");
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div className="mb-1">
+        <Counter />
+      </div>
+      <div className="mb-1">
+        <SearchMovie
+          value={search}
+          onChange={setSearch}
+          onSearch={handleSearch}
+        />
+      </div>
+      <Select options={genreOptions} placeholder="Please select genre" selectedValue={'Crime'} />
     </div>
   );
 }

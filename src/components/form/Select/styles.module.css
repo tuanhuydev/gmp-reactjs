@@ -1,0 +1,20 @@
+.menu {
+  display: none;
+  left: 0;
+  z-index: 99;
+  background-color: var(--light);
+}
+
+.menu.visible {
+    display: block;
+}
+
+.option {
+  background-color: var(--grey-lighter);
+  transition: background-color 250ms;
+}
+
+.option.selected {
+  background-color: var(--primary);
+  color: var(--light);
+}
