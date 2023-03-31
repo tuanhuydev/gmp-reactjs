@@ -2,17 +2,12 @@ import { useState } from "react";
 import Counter from "./components/Counter";
 import SearchMovie from "./components/SearchMovie";
 import Select from "./components/form/Select";
+import { GENRE_OPTIONS } from './configs/constants';
+import Home from "./pages/Home";
 
 function App() {
   const [search, setSearch] = useState("");
   const [genre, setGenre] = useState(['crime']);
-
-  const genreOptions = [
-    { label: "Crime", value: "crime" },
-    { label: "Documentary", value: "documentary" },
-    { label: "Horror", value: "horror" },
-    { label: "Comedy", value: "comedy" },
-  ];
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -36,7 +31,8 @@ function App() {
           onSearch={handleSearch}
         />
       </div>
-      <Select options={genreOptions} onChange={handleChangeGenre} placeholder="Please select genre" value={genre} />
+      <Select options={GENRE_OPTIONS} onChange={handleChangeGenre} placeholder="Please select genre" value={genre} />
+      <Home />
     </div>
   );
 }
