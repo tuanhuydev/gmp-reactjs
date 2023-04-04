@@ -6,7 +6,6 @@ export default {
   component: SearchMovie,
 }
 
-
 export const Default = (args) => <SearchMovie {...args} />;
 
 
