@@ -8,10 +8,10 @@ export function Option({ value, label, selected, onSelect }) {
   };
   return (
     <div
-      className={`flex items-center px-2 py-1 cursor-pointer ${styles.option} ${
+      className={`flex items-center px-2 py-3 cursor-pointer ${styles.option} ${
         selected ? styles.selected : ""
       }`}
-      value={value}
+      aria-label={value}
       onClick={select}
     >
       <input
@@ -25,12 +25,13 @@ export function Option({ value, label, selected, onSelect }) {
   );
 }
 
-export default function SelectGenre({
+export default function Select({
   label,
-  placeholder,
+  placeholder = "Select",
   name,
   value,
   options = [],
+  onSelect
 }) {
   // State
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -68,6 +69,10 @@ export default function SelectGenre({
     }
   }, [options, value]);
 
+  useEffect(() => {
+    onSelect(selectedOptions);
+  }, [onSelect, selectedOptions]);
+
   const selectOption = (value) => {
     if (selectedOptions.includes(value)) {
       setSelectedOptions(selectedOptions.filter((option) => option !== value));
@@ -85,13 +90,16 @@ export default function SelectGenre({
           onClick={toggleMenu(true)}
           onMouseLeave={toggleMenu(false)}
         >
-          {placeholder && !selectedOptions?.length
-            ? placeholder
-            : selectedOptions.join(",")}
+          {placeholder && !selectedOptions?.length ? (
+            <span className="text-light">{placeholder}</span>
+          ) : (
+            selectedOptions.join(",")
+          )}
         </div>
         <div
           className={`absolute w-full ${styles.menu}`}
           ref={menuRef}
+          data-testid="select-menu"
           onMouseEnter={toggleMenu(true)}
           onMouseLeave={toggleMenu(false)}
         >
