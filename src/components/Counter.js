@@ -11,7 +11,7 @@ export default class Counter extends Component {
 
     render() {
         const EMPTY_ATTRIBUTES = {};
-        const headerEl = createElement('h1', EMPTY_ATTRIBUTES, `${this.state.count}`);
+        const headerEl = createElement('h1', {  'data-testid': "counter"}, `${this.state.count}`);
         const decreaseBtn = createElement('button', {
             id: 'decrease',
             onClick: this.click.bind(this, -1)
