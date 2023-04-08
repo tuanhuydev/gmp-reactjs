@@ -33,11 +33,15 @@ input:focus-within {
 .text-light {
   color: var(--light);
 }
-
-/* Flex */
+/* Display */
+.relative {
+  display: relative;
+}
 .flex {
   display: flex;
 }
+
+/* Flex */
 .items-center {
   align-items: center;
 }

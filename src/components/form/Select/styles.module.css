@@ -1,3 +1,23 @@
+.select::after {
+  position: absolute;
+  content: '';
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-25%) rotate(0);
+  border-left: 0.5rem solid transparent;
+  border-right: 0.5rem solid transparent;
+  border-top: 0.5rem solid var(--primary);
+  transition: all 250ms;
+}
+
+.select:focus::after,
+.select:focus-within::after,
+.select:focus-visible::after,
+.select:active::after,
+.select.active::after {
+  transform: translateY(-25%) rotate(-180deg);
+}
+
 .menu {
   display: none;
   left: 0;

@@ -44,8 +44,10 @@ export default function Select({
       const menuEl = menuRef.current;
       if (menuEl && isFocus) {
         menuEl.classList.add(styles.visible);
+        menuEl.parentNode.firstChild.classList.add(styles.active);
       } else if (menuEl) {
         menuEl.classList.remove(styles.visible);
+        menuEl.parentNode.firstChild.classList.remove(styles.active);
       }
     };
 
@@ -86,7 +88,7 @@ export default function Select({
       {label && <label>{label}</label>}
       <div className="relative">
         <div
-          className="input"
+          className={`input relative ${styles.select}`}
           onClick={toggleMenu(true)}
           onMouseLeave={toggleMenu(false)}
         >
