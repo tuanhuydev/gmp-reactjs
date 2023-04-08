@@ -1,17 +1,18 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import '../src/setupTests';
-import Couter from '../src/components/Counter';
+import '../setupTests';
+import Couter from '../components/Counter';
 import React from 'react';
-import SearchMovie from '../src/components/SearchMovie';
-import SelectGenre from '../src/components/form/Select';
+import SearchMovie from '../components/SearchMovie';
+import SelectGenre from '../components/form/Select';
+import MovieTile from '../components/MovieTile';
+import { mockMovie } from '../__tests__/mocks/mockMovie';
 
 describe('Counter testsuits', function() {
-  
   it('Counter testing', async function() {
     render(<Couter />);
     expect(await screen.findByTestId('counter')).not.toBeNull();
   });
-  
+
   it('Counter should decrease/increase value on click', async function() {
     render(<Couter />);
     const [decreaseBtn, increaseBtn] = await screen.findAllByRole('button');
@@ -57,20 +58,18 @@ describe('Search form test suits', function() {
 
 describe('Genre select test suits', function() {
   const onChange = jest.fn();
-  const mockOptions = [];
+  const mockOptions = [
+    { label: "Crime", value: "crime" },
+    { label: "Documentary", value: "documentary" },
+    { label: "Horror", value: "horror" },
+    { label: "Comedy", value: "comedy" },
+  ];
   it('Component should render', async function() {
-    // options={genreOptions} placeholder="Please select genre" selectedValue={'Crime'}
     render(<SelectGenre onSelect={onChange} options={mockOptions} placeholder="Please select genre" />);
     const selectEl = await screen.findByText("Please select genre");
     expect(selectEl).toBeInTheDocument();
   });
   it('Component should render options', async function() {
-    const mockOptions = [
-      { label: "Crime", value: "crime" },
-      { label: "Documentary", value: "documentary" },
-      { label: "Horror", value: "horror" },
-      { label: "Comedy", value: "comedy" },
-    ];
 
     render(<SelectGenre onSelect={onChange} options={mockOptions} placeholder="Please select genre" />);
     const selectEl = await screen.findByTestId("select-testid");
@@ -79,7 +78,21 @@ describe('Genre select test suits', function() {
     expect(await screen.findByText('Documentary')).toBeInTheDocument();
     expect(await screen.findByText('Horror')).toBeInTheDocument();
     expect(await screen.findByText('Comedy')).toBeInTheDocument();
+  });
+  it('Component should perform click', async function() {
+    render(<SelectGenre onSelect={onChange} options={['crime', 'documentary', 'horror']} placeholder="Please select genre" />);
+    const selectEl = await screen.findByTestId("select-testid");
+    fireEvent.click(selectEl);
+    fireEvent.click(screen.getByLabelText('crime'));
+    expect(onChange).toBeCalled();
+  });
+});
 
+describe('Movie tiles test suits', function() {
+  const onChange = jest.fn();
+  it('Movie tile should be render', async function() {
+    render(<MovieTile {...mockMovie} onClick={onChange} />);
+    expect(await screen.findByTestId("tile-testid")).toBeInTheDocument();
   });
 });
 
