@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import MovieTile from "../components/MovieTile";
 import { EMPTY_STRING, MOCK_TILES } from "../configs/constants";
 import styled from "styled-components";
@@ -10,6 +10,9 @@ import MovieDetails from "../components/MovieDetails";
 import Logo from "../components/Logo";
 import Footer from "../components/Footer";
 import Select from "../components/form/Select";
+import { DispatchContext, StoreContext } from "../configs/store/context";
+import MovieForm from "../components/Modal/MovieForm";
+import Toast from "../components/Modal/Toast";
 
 const Tiles = styled.div`
   display: flex;
@@ -35,27 +38,38 @@ const AddButton = styled.button`
 `;
 
 export default function Home() {
+  // State
   const [search, setSearch] = useState(EMPTY_STRING);
   const [selectedMovie, setMovie] = useState(null);
+
+  // Context
+  const { showModal, showToast } = useContext(StoreContext);
+  const dispatch = useContext(DispatchContext);
+
   const handleSearch = (event) => {};
 
   const selectMovie = (id) => {
-    console.log(id);
     const movie = MOCK_TILES.find((tile) => tile.id === id);
     if (movie) {
       setMovie(movie);
     }
   };
   const selectCategory = (value) => {
-    console.log(value);
-  }
+    // console.log(value);
+  };
+
+  const addMovie = () => {
+    dispatch({ type: "toggleModal", showModal: !showModal });
+  };
 
   return (
     <Page>
       <Header>
         <div className="flex justify-between py-3">
           <Logo />
-          {!selectedMovie && <AddButton>+ Add Movie</AddButton>}
+          {!selectedMovie && (
+            <AddButton onClick={addMovie}>+ Add Movie</AddButton>
+          )}
         </div>
         <SearchMovie
           onChange={setSearch}
@@ -65,7 +79,11 @@ export default function Home() {
       </Header>
       <div className="px-7">
         <div className="py-3 px-3 w-one-third ml-auto">
-          <Select options={['All', 'Category']} value={['All']} onSelect={selectCategory} />
+          <Select
+            options={["All", "Category"]}
+            value={["All"]}
+            onSelect={selectCategory}
+          />
         </div>
         {selectedMovie && <MovieDetails movie={selectedMovie} />}
         <Tiles>
@@ -75,6 +93,13 @@ export default function Home() {
         </Tiles>
       </div>
       <Footer />
+      <MovieForm open={showModal} />
+      <Toast
+        open={showToast}
+        title="congratulations !"
+        description="The movie has been added to
+database successfully "
+      />
     </Page>
   );
 }

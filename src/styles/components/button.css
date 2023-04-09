@@ -1,0 +1,21 @@
+.btn {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.btn.btn-contained {
+  background-color: var(--primary);
+  color: var(--light);
+}
+.btn.btn-contained:hover,
+.btn.btn-outline:hover {
+  filter: brightness(0.9);
+}
+
+.btn.btn-outline {
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  background-color: transparent;
+}

@@ -1,0 +1,27 @@
+.input {
+  cursor: pointer;
+  border: 1px solid var(--grey);
+  padding: 1rem 2rem;
+  min-height: 1rem;
+  font-size: 1.125rem;
+  border-radius: var(--border-radius);
+  background-color: rgba(var(--dark), 0.8);
+  color: var(--light);
+  width: -webkit-fill-available;
+}
+
+.input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  border-radius: 4px;
+  margin-right: 2px;
+  opacity: 0.6;
+  filter: invert(0.8);
+}
+
+.input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.input::placeholder {
+  color: var(--light);
+}

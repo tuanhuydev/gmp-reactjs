@@ -31,7 +31,8 @@ export default function Select({
   name,
   value,
   options = [],
-  onSelect
+  onSelect,
+  className
 }) {
   // State
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -84,8 +85,8 @@ export default function Select({
   };
 
   return (
-    <div className="relative" data-testid="select-testid">
-      {label && <label>{label}</label>}
+    <div className={`relative w-full ${className}`} data-testid="select-testid">
+      {label && <label className="block text-primary text-lg upper mb-2">{label}</label>}
       <div className="relative">
         <div
           className={`input relative ${styles.select}`}
