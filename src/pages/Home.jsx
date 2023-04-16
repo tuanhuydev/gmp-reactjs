@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
-import MovieTile from "../components/MovieTile";
-import { EMPTY_STRING, MOCK_TILES } from "../configs/constants";
+import React, { useCallback, useContext, useEffect } from "react";
+import { EMPTY_STRING, SORT_BY_OPTIONS } from "../commons/constants";
 import styled from "styled-components";
 import SearchMovie from "../components/SearchMovie";
 import HeaderBackground from "../assets/images/header_background.png";
@@ -13,13 +12,120 @@ import Select from "../components/form/Select";
 import { DispatchContext, StoreContext } from "../configs/store/context";
 import MovieForm from "../components/Modal/MovieForm";
 import Toast from "../components/Modal/Toast";
+import MovieList from "../components/MovieList";
+import { movieAdapter } from "../utils/movieHelpers";
 
-const Tiles = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  margin: 2rem 0;
-`;
+export default function Home() {
+  // Context
+  const { showModal, showToast } = useContext(StoreContext);
+
+  // State
+  const [movieState, setMovieState] = useState({
+    movies: [],
+    selected: null,
+  });
+  const [movieFilter, setMovieFilter] = useState({
+    search: EMPTY_STRING,
+    searchBy: "title",
+    sortBy: "",
+    sortOrder: "desc",
+  });
+
+  // Hooks
+  const dispatch = useContext(DispatchContext);
+
+  const fetchMovies = useCallback(async (filter) => {
+    let url = new URL("http://localhost:4000/movies");
+    const fetchOptions = {};
+    if (filter) {
+      url = `${url}?${new URLSearchParams(filter)}`;
+    }
+    const response = await fetch(url, fetchOptions);
+    const { data } = await response.json();
+    const movies = data?.length ? movieAdapter(data) : [];
+    console.log(movies);
+    setMovieState((prevState) => ({ ...prevState, movies }));
+  }, []);
+
+  const setSearch = useCallback((search) => {
+    setMovieFilter((filter) => ({ ...filter, search }));
+  }, []);
+
+  const handleSearch = useCallback(
+    (e) => {
+      e.preventDefault();
+      fetchMovies(movieFilter);
+    },
+    [fetchMovies, movieFilter]
+  );
+
+  const changeSortBy = (value) => {
+    setMovieFilter((prevState) => ({ ...prevState, sortBy: value }));
+  };
+
+  const addMovie = useCallback(() => {
+    dispatch({ type: "toggleModal", showModal: !showModal });
+  }, [dispatch, showModal]);
+
+  const selectMovie = (selectedMovie) => {
+    const movieToUpdate = movies.find((movie) => movie.id === selectedMovie.id);
+    if (movieToUpdate) {
+      setMovieState((prevState) => ({ ...prevState, selected: movieToUpdate }));
+    }
+  };
+
+  useEffect(() => {
+    const timmer = setTimeout(() => {
+      fetchMovies(movieFilter);
+    }, 700);
+    return () => {
+      clearTimeout(timmer);
+    };
+  }, [fetchMovies, movieFilter]);
+
+  const { selected, movies } = movieState;
+
+  return (
+    <Page>
+      <Header>
+        <div className="flex justify-between py-3">
+          <Logo />
+          {!selected && <AddButton onClick={addMovie}>+ Add Movie</AddButton>}
+        </div>
+        <SearchMovie
+          onChange={setSearch}
+          value={movieFilter.search}
+          onSearch={handleSearch}
+        />
+      </Header>
+      <div className="px-7">
+        <div className="ml-auto w-one-fourth flex items-center">
+          <label htmlFor="" className="upper mr-3 text-light">
+            sort by
+          </label>
+          <div className="py-3 px-3 grow">
+            <Select
+              options={SORT_BY_OPTIONS}
+              value={SORT_BY_OPTIONS[0].value}
+              onSelect={changeSortBy}
+            />
+          </div>
+        </div>
+        {selected && <MovieDetails movie={selected} />}
+        <MovieList movies={movies} onSelect={selectMovie} />
+      </div>
+      <Footer />
+      <MovieForm open={showModal} />
+      <Toast
+        open={showToast}
+        title="congratulations !"
+        description="The movie has been added to
+database successfully "
+      />
+    </Page>
+  );
+}
+
 const Header = styled.header`
   background-image: url("${HeaderBackground}");
   height: 300px;
@@ -36,70 +142,3 @@ const AddButton = styled.button`
   padding: 1rem 2rem;
   border-radius: 0.25rem;
 `;
-
-export default function Home() {
-  // State
-  const [search, setSearch] = useState(EMPTY_STRING);
-  const [selectedMovie, setMovie] = useState(null);
-
-  // Context
-  const { showModal, showToast } = useContext(StoreContext);
-  const dispatch = useContext(DispatchContext);
-
-  const handleSearch = (event) => {};
-
-  const selectMovie = (id) => {
-    const movie = MOCK_TILES.find((tile) => tile.id === id);
-    if (movie) {
-      setMovie(movie);
-    }
-  };
-  const selectCategory = (value) => {
-    // console.log(value);
-  };
-
-  const addMovie = () => {
-    dispatch({ type: "toggleModal", showModal: !showModal });
-  };
-
-  return (
-    <Page>
-      <Header>
-        <div className="flex justify-between py-3">
-          <Logo />
-          {!selectedMovie && (
-            <AddButton onClick={addMovie}>+ Add Movie</AddButton>
-          )}
-        </div>
-        <SearchMovie
-          onChange={setSearch}
-          value={search}
-          onSearch={handleSearch}
-        />
-      </Header>
-      <div className="px-7">
-        <div className="py-3 px-3 w-one-third ml-auto">
-          <Select
-            options={["All", "Category"]}
-            value={["All"]}
-            onSelect={selectCategory}
-          />
-        </div>
-        {selectedMovie && <MovieDetails movie={selectedMovie} />}
-        <Tiles>
-          {MOCK_TILES.map((tile) => (
-            <MovieTile key={tile.name} {...tile} onClick={selectMovie} />
-          ))}
-        </Tiles>
-      </div>
-      <Footer />
-      <MovieForm open={showModal} />
-      <Toast
-        open={showToast}
-        title="congratulations !"
-        description="The movie has been added to
-database successfully "
-      />
-    </Page>
-  );
-}

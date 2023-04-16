@@ -5,7 +5,7 @@ import TextInput from "../form/TextInput";
 import DateInput from "../form/DateInput";
 import Textarea from "../form/Textarea";
 import styled from "styled-components";
-import { GENRE_OPTIONS } from "../../configs/constants";
+import { GENRE_OPTIONS } from "../../commons/constants";
 
 export default function MovieForm({ open, onClose, movie }) {
 

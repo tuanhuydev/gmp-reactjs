@@ -1,11 +1,20 @@
-import React, { createRef, useEffect, useState } from "react";
+import React, { createRef, useCallback, useEffect, useState } from "react";
 import styles from "./styles.module.css";
 
-export function Option({ value, label, selected, onSelect }) {
-  const select = (event) => {
-    event.preventDefault();
-    onSelect(value);
-  };
+const Option = React.memo(function Option({
+  value,
+  label,
+  selected,
+  onSelect,
+}) {
+  const select = useCallback(
+    (event) => {
+      event.preventDefault();
+      onSelect(value, label);
+    },
+    [label, onSelect, value]
+  );
+
   return (
     <div
       className={`flex items-center px-2 py-3 cursor-pointer ${styles.option} ${
@@ -23,80 +32,116 @@ export function Option({ value, label, selected, onSelect }) {
       <span className="grow">{label}</span>
     </div>
   );
-}
+});
 
-export default function Select({
+export default React.memo(function Select({
   label,
   placeholder = "Select",
-  name,
   value,
   options = [],
   onSelect,
-  className
+  isMultiple = false,
+  className,
 }) {
   // State
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectState, setSelectState] = useState(null); // can be array or single object
+
+  const isMultipleSelect = selectState && Array.isArray(selectState);
+
   // Ref
   const menuRef = createRef(null);
 
-  const toggleMenu =
+  const toggleMenu = useCallback(
     (isFocus = true) =>
-    () => {
-      const menuEl = menuRef.current;
-      if (menuEl && isFocus) {
-        menuEl.classList.add(styles.visible);
-        menuEl.parentNode.firstChild.classList.add(styles.active);
-      } else if (menuEl) {
-        menuEl.classList.remove(styles.visible);
-        menuEl.parentNode.firstChild.classList.remove(styles.active);
-      }
-    };
+      () => {
+        const menuEl = menuRef.current;
+        if (!menuEl) return;
 
-  useEffect(() => {
-    // Map values
-    let selected = [];
-    if (Array.isArray(value) && Array.isArray(options)) {
-      options.forEach((option) => {
-        if (typeof option === "string") {
-          selected = value;
-        } else {
-          // option is an object
-          value.forEach((item) => {
-            if (option?.value === item) {
-              selected.push(option?.value);
-            }
-          });
+        const menuClasses = menuEl.classList;
+        const menuParentClasses = menuEl.parentNode.firstChild.classList;
+
+        // Visibility handle
+        menuClasses.remove(styles.visible);
+        menuParentClasses.remove(styles.active);
+
+        if (isFocus) {
+          menuClasses.add(styles.visible);
+          menuParentClasses.add(styles.active);
         }
-      });
-      setSelectedOptions(selected);
-    }
-  }, [options, value]);
+      },
+    [menuRef]
+  );
+
+  /**
+   * Detect whenever option is selected
+   * - if multiple state then check option existed
+   * - if single state then value
+   */
+  const optionSelected = useCallback(
+    (option) =>
+      isMultipleSelect
+        ? selectState.some((item) => item?.value === option?.value)
+        : option?.value === selectState?.value,
+    [isMultipleSelect, selectState]
+  );
+
+  /**
+   * update state on selection
+   * - if single select then override current state
+   * - if multiple select then check whenever existed and update state as array
+   * - update state action should trigger callback
+   */
+  const selectOption = useCallback(
+    (value, label) => {
+      const newOption = { label, value };
+      if (!isMultipleSelect) {
+        setSelectState(newOption);
+      } else {
+        // check / un-check
+        setSelectState((selectState) => {
+          return optionSelected(newOption)
+            ? selectState.filter((option) => option.value !== value)
+            : [...new Set([...selectState, newOption])];
+        });
+      }
+      onSelect(selectState);
+    },
+    [isMultipleSelect, onSelect, optionSelected, selectState]
+  );
 
   useEffect(() => {
-    onSelect(selectedOptions);
-  }, [onSelect, selectedOptions]);
-
-  const selectOption = (value) => {
-    if (selectedOptions.includes(value)) {
-      setSelectedOptions(selectedOptions.filter((option) => option !== value));
-    } else {
-      setSelectedOptions([...selectedOptions, value]);
+    if (value) {
+      // map value
+      let movieState;
+      if (isMultiple && Array.isArray(value)) {
+        movieState = options.filter(({ value: optionValue }) => value === optionValue);
+      } else {
+        const selectedOption = options.find((option) => option.value === value);
+        if (selectedOption) {
+          movieState = selectedOption;
+        }
+      }
+      setSelectState(movieState);
     }
-  };
+  }, [isMultiple, options, value]);
 
   return (
     <div className={`relative w-full ${className}`} data-testid="select-testid">
-      {label && <label className="block text-primary text-lg upper mb-2">{label}</label>}
+      {label && (
+        <label className="block text-primary text-lg upper mb-2">{label}</label>
+      )}
       <div className="relative">
         <div
           className={`input relative ${styles.select}`}
           onClick={toggleMenu(true)}
           onMouseLeave={toggleMenu(false)}
         >
-          {placeholder && !selectedOptions?.length ? (
+          {placeholder && !selectState ? (
             <span className="text-light">{placeholder}</span>
+          ) : isMultipleSelect ? (
+            <span>{selectState.map((option) => option.label).join(",")}</span>
           ) : (
-            selectedOptions.join(",")
+            <span>{selectState.label}</span>
           )}
         </div>
         <div
@@ -106,30 +151,17 @@ export default function Select({
           onMouseEnter={toggleMenu(true)}
           onMouseLeave={toggleMenu(false)}
         >
-          {options.map((option) => {
-            if (typeof option === "string") {
-              return (
-                <Option
-                  label={option}
-                  key={option}
-                  value={option}
-                  selected={selectedOptions.includes(option)}
-                  onSelect={selectOption}
-                />
-              );
-            }
-            return (
-              <Option
-                label={option?.label}
-                key={option?.value}
-                value={option?.value}
-                selected={selectedOptions.includes(option?.value)}
-                onSelect={selectOption}
-              />
-            );
-          })}
+          {options.map((option) => (
+            <Option
+              label={option?.label}
+              key={option?.value}
+              value={option?.value}
+              selected={optionSelected(option)}
+              onSelect={selectOption}
+            />
+          ))}
         </div>
       </div>
     </div>
   );
-}
+});

@@ -95,6 +95,11 @@ textarea {
 .w-full {
   width: 100%;
 }
+
+.w-one-fourth {
+  width: 25%;
+}
+
 .w-one-third {
   width: 30%;
 }
