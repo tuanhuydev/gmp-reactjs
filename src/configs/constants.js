@@ -2,6 +2,11 @@ import PulpFictionSrc from '../assets/images/pulp_fiction.png';
 
 export const EMPTY_STRING = "";
 
+export const INITIAL_STORE = {
+  showModal: false,
+  showToast: false,
+}
+
 export const GENRE_OPTIONS = [
   { label: "Crime", value: "crime" },
   { label: "Documentary", value: "documentary" },

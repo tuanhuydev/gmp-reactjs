@@ -1,24 +1,19 @@
-import { useState } from "react";
-import Counter from "./components/Counter";
-import SearchMovie from "./components/SearchMovie";
-import Select from "./components/form/Select";
-import { GENRE_OPTIONS } from "./configs/constants";
+import { useReducer } from "react";
 import Home from "./pages/Home";
+import { INITIAL_STORE } from "./configs/constants";
+import { appReducer } from "./configs/reducers/metaReducer";
+import { StoreContext, DispatchContext } from "./configs/store/context";
 
 function App() {
-  const [search, setSearch] = useState("");
-  const [genre, setGenre] = useState(["crime"]);
+  const [data, dispatch] = useReducer(appReducer, INITIAL_STORE);
 
-  const handleSearch = (event) => {
-    event.preventDefault();
-    console.log("Submit Search Form");
-  };
-
-  const handleChangeGenre = (value) => {
-    setGenre(value);
-  };
-
-  return <Home />;
+  return (
+    <StoreContext.Provider value={data}>
+      <DispatchContext.Provider value={dispatch}>
+        <Home />
+      </DispatchContext.Provider>
+    </StoreContext.Provider>
+  );
 }
 
 export default App;

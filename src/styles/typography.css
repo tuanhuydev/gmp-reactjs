@@ -1,3 +1,32 @@
+/* TEXT COLOR */
 .text-light {
   color: var(--light);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+/* TEXT SIZE */
+.text-xlg {
+  font-size: 1.5rem;
+}
+.text-lg {
+  font-size: 1.125rem;
+}
+
+.text-base {
+  font-size: 1rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-xm {
+  font-size: 0.75rem;
+}
+
+.upper {
+  text-transform: uppercase;
 }
