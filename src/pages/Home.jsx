@@ -14,6 +14,7 @@ import MovieForm from "../components/Modal/MovieForm";
 import Toast from "../components/Modal/Toast";
 import MovieList from "../components/MovieList";
 import { movieAdapter } from "../utils/movieHelpers";
+import { useParams } from "react-router-dom";
 
 export default function Home() {
   // Context
@@ -33,6 +34,8 @@ export default function Home() {
 
   // Hooks
   const dispatch = useContext(DispatchContext);
+  const { movieId } = useParams();
+  console.log(movieId);
 
   const fetchMovies = useCallback(async (filter) => {
     let url = new URL("http://localhost:4000/movies");
@@ -74,6 +77,7 @@ export default function Home() {
     }
   };
 
+  // Effects
   useEffect(() => {
     const timmer = setTimeout(() => {
       fetchMovies(movieFilter);
@@ -82,6 +86,21 @@ export default function Home() {
       clearTimeout(timmer);
     };
   }, [fetchMovies, movieFilter]);
+
+  useEffect(() => {
+    if (movieId && movieState.movies) {
+      const selectedMovie = movieState.movies.find(
+        (movie) => movie.id === Number(movieId)
+      );
+      console.log({ selectedMovie });
+      if (selectedMovie) {
+        setMovieState((prevState) => ({
+          ...prevState,
+          selected: selectedMovie,
+        }));
+      }
+    }
+  }, [movieId, movieState.movies]);
 
   const { selected, movies } = movieState;
 
