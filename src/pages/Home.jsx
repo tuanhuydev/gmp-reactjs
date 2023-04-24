@@ -83,6 +83,8 @@ export default function Home() {
     };
   }, [fetchMovies, movieFilter]);
 
+
+
   const { selected, movies } = movieState;
 
   return (
