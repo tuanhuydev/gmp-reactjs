@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { EMPTY_STRING } from "../configs/constants";
+import { EMPTY_STRING } from "../commons/constants";
 
 const Description = styled.p`
   color: var(--light);
@@ -31,18 +31,18 @@ const Container = styled.div`
 
 
 
-export default function MovieDetails({movie: { image, name, genres = [], year, description, length = "" }}) {
+export default function MovieDetails({movie: { id, posterPath, title, releaseDate, tagline, genres, overview, onClick }}) {
   return (
     <Container>
-        <img src={image} width={300} height={500} alt="hello" />
+        <img src={posterPath} width={300} height={500} alt={title} />
       <div className="w-half">
-        <Tile>{name}</Tile>
+        <Tile>{title}</Tile>
         <GenreList>{genres?.length ? genres.map((genre) => <GenreItem key={genre}>{genre}</GenreItem>) : EMPTY_STRING}</GenreList>
         <div className="flex gap-3">
-          <SubTilePrimary>{year}</SubTilePrimary>
-          <SubTilePrimary>{length}</SubTilePrimary>
+          <SubTilePrimary>{releaseDate}</SubTilePrimary>
+          <SubTilePrimary>{tagline}</SubTilePrimary>
         </div>
-        <Description>{description}</Description>
+        <Description>{overview}</Description>
       </div>
     </Container>
   );

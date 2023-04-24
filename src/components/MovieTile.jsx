@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import styled from "styled-components";
-import { EMPTY_STRING } from "../configs/constants";
+import { EMPTY_STRING } from "../commons/constants";
 
 const Title = styled.h3`
   margin: 0;
@@ -23,7 +23,16 @@ const GenreList = styled.ul`
   color: #fff;
 `;
 
-const GenreItem = styled.li``;
+const GenreItem = styled.li`
+  display: inline;
+  font-size: 0.75rem;
+  margin-right: 0.25rem;
+`;
+
+const Image = styled.img`
+  min-width: 300;
+  min-height: 500;
+`
 
 const Year = styled.span`
   border: 1px solid #fff;
@@ -32,17 +41,17 @@ const Year = styled.span`
   padding: 0.25rem;
 `;
 
-export default function MovieTile({ id, image, name, year, genres, onClick }) {
+export default function MovieTile({ id, posterPath, title, releaseDate, genres, onClick }) {
   const handleClick = () => {
     onClick(id);
   };
 
   return (
     <Wrapper className="cursor-pointer" onClick={handleClick} data-testid="tile-testid">
-      <img src={image} width={300} height={500} alt={name} />
+      <Image src={posterPath} width={300} height={500} alt={title} />
       <div className="flex items-center justify-between">
-        <Title>{name}</Title>
-        <Year>{year}</Year>
+        <Title>{title}</Title>
+        <Year>{releaseDate.slice(0, 4)}</Year>
       </div>
       <GenreList>
         {genres?.length
@@ -54,9 +63,9 @@ export default function MovieTile({ id, image, name, year, genres, onClick }) {
 }
 
 MovieTile.propTypes = {
-  image: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  year: PropTypes.number.isRequired,
+  posterPath: PropTypes.string,
+  title: PropTypes.string.isRequired,
+  releaseDate: PropTypes.string,
   onClick: PropTypes.func.isRequired,
   genres: PropTypes.arrayOf(PropTypes.string),
 };
