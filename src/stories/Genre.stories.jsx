@@ -6,33 +6,30 @@ export default {
   component: Select,
   parameters: {
     options: [
-        { name: 'red', value: '#f00' },
-        { name: 'green', value: '#0f0' },
-        { name: 'blue', value: '#00f' },
+      { name: 'red', value: '#f00' },
+      { name: 'green', value: '#0f0' },
+      { name: 'blue', value: '#00f' },
     ],
-    placeholder: "Select items"
+    placeholder: 'Select items',
   },
   argTypes: {
     options: {
       control: { type: 'text' },
     },
-  }
-}
+  },
+};
 
-const Template = (args) => (<Select {...args} />);
-
+const Template = (args) => <Select {...args} />;
 
 const genreOptions = [
-  { label: "Crime", value: "crime" },
-  { label: "Documentary", value: "documentary" },
-  { label: "Horror", value: "horror" },
-  { label: "Comedy", value: "comedy" },
+  { label: 'Crime', value: 'crime' },
+  { label: 'Documentary', value: 'documentary' },
+  { label: 'Horror', value: 'horror' },
+  { label: 'Comedy', value: 'comedy' },
 ];
 export const Default = Template.bind({});
 
 Default.args = {
   options: genreOptions,
-  placeholder: "Select Something"
-}
-
-
+  placeholder: 'Select Something',
+};

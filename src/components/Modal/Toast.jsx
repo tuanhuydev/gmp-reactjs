@@ -1,7 +1,7 @@
-import React from "react";
-import Modal from "./Base";
-import PropTypes from "prop-types";
-import styled from "styled-components";
+import React from 'react';
+import Modal from './Base';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 export default function Toast({ open = false, title, icon, description }) {
   return (
@@ -10,7 +10,6 @@ export default function Toast({ open = false, title, icon, description }) {
         {<div>{icon}</div>}
         <Title>{title}</Title>
         {description && <Description>{description}</Description>}
-
       </div>
     </Modal>
   );
@@ -33,5 +32,6 @@ const Description = styled.p`
 Toast.propTypes = {
   open: PropTypes.bool,
   icon: PropTypes.any,
+  description: PropTypes.string,
   title: PropTypes.string.isRequired,
 };

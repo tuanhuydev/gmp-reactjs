@@ -1,12 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap");
-@import "./gutter.css";
-@import "./typography.css";
-@import "./background.css";
-@import "./grid.css";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap');
+@import './gutter.css';
+@import './typography.css';
+@import './background.css';
+@import './grid.css';
 
 /* Component */
-@import "./components/input.css";
-@import "./components/button.css";
+@import './components/input.css';
+@import './components/button.css';
 
 :root {
   --primary: #f65261;
@@ -20,7 +20,7 @@
 }
 
 body {
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
   margin: 0;
   padding: 0;
   position: relative;
@@ -40,7 +40,7 @@ textarea:focus-within {
   outline: none;
 }
 textarea {
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .flex {

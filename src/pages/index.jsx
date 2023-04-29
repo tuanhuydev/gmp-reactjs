@@ -1,23 +1,32 @@
-import React from "react";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Home from "./Home";
-import ErrorBoundary from "../components/commons/ErrorRouting";
-import MovieDetail from "../components/MovieDetails";
-import AddNewMovie from "../components/AddNewMovie";
+import React from 'react';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import Home from './Home';
+import ErrorBoundary from '../components/commons/ErrorRouting';
+import MovieDetail from '../components/MovieDetails';
+import MovieModal from './MovieModal';
+import movieService from '../services/MovieService';
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Home />,
     children: [
       {
-        path: "/:movieId",
-        element: <MovieDetail />
+        path: '/:movieId',
+        element: <MovieDetail />,
+        loader: async ({ params }) => movieService.fetchMovie(params.movieId),
+        children: [
+          {
+            path: '/:movieId/edit',
+            loader: async ({ params }) => movieService.fetchMovie(params.movieId),
+            element: <MovieModal />,
+          },
+        ],
       },
       {
-        path: "/new",
-        element: <AddNewMovie />
-      }
+        path: '/new',
+        element: <MovieModal />,
+      },
     ],
   },
 ]);

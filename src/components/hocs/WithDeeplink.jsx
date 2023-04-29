@@ -1,10 +1,8 @@
-import React, { useEffect } from "react";
-import { memo } from "react";
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import React, { useEffect, useState, memo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 function withDeeplink(Component) {
-  return memo(() => {
+  const DeepLinkComponent = () => {
     // Hooks
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -22,10 +20,10 @@ function withDeeplink(Component) {
 
     useEffect(() => {
       makeFilter();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return <Component {...filter} setSearchParams={setSearchParams} />;
-  });
+  };
+  return memo(DeepLinkComponent);
 }
 
 export default withDeeplink;

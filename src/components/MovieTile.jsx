@@ -1,7 +1,7 @@
-import PropTypes from "prop-types";
-import React from "react";
-import styled from "styled-components";
-import { EMPTY_STRING } from "../commons/constants";
+import PropTypes from 'prop-types';
+import React from 'react';
+import styled from 'styled-components';
+import { EMPTY_STRING } from '../commons/constants/global';
 
 const Title = styled.h3`
   margin: 0;
@@ -32,7 +32,7 @@ const GenreItem = styled.li`
 const Image = styled.img`
   min-width: 300;
   min-height: 500;
-`
+`;
 
 const Year = styled.span`
   border: 1px solid #fff;
@@ -54,15 +54,14 @@ export default function MovieTile({ id, posterPath, title, releaseDate, genres, 
         <Year>{releaseDate.slice(0, 4)}</Year>
       </div>
       <GenreList>
-        {genres?.length
-          ? genres.map((genre) => <GenreItem key={genre}>{genre}</GenreItem>)
-          : EMPTY_STRING}
+        {genres?.length ? genres.map((genre) => <GenreItem key={genre}>{genre}</GenreItem>) : EMPTY_STRING}
       </GenreList>
     </Wrapper>
   );
 }
 
 MovieTile.propTypes = {
+  id: PropTypes.number,
   posterPath: PropTypes.string,
   title: PropTypes.string.isRequired,
   releaseDate: PropTypes.string,
