@@ -1,6 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useRef } from "react";
-import { useContext } from "react";
-import { DispatchContext } from "../../configs/store/context";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import { createPortal } from "react-dom";
 
@@ -46,33 +44,22 @@ export default function Modal({
   children,
   open = false,
   closable = true,
+  onClose,
   ...restProps
 }) {
-  // Hooks
-  const dispatch = useContext(DispatchContext);
-
-  const closeModal = useCallback(() => {
-    const action = { type: "toggleModal", showModal: false };
-    dispatch(action);
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (!open) {
-      closeModal();
-    }
-  }, [closeModal, open]);
   const containerRef = useRef();
 
   return (
     <div ref={containerRef}>
-      {open && containerRef &&
+      {open &&
+        containerRef &&
         createPortal(
           <Container {...restProps}>
             <Dialog>
               <div className="title">
                 {title && <Title className="text-light">{title}</Title>}
                 {closable && (
-                  <CloseIcon onClick={closeModal}>
+                  <CloseIcon onClick={onClose}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       height="32"

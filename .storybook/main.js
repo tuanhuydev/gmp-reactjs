@@ -27,7 +27,6 @@ module.exports = {
       ],
       include: path.resolve(__dirname, "../src"),
     });
-    console.log(config.module.rules);
 
     return config;
   },

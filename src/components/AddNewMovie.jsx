@@ -1,41 +1,40 @@
-import React, { useEffect } from "react";
-import Select from "../form/Select";
-import Modal from "../Modal/Base";
-import TextInput from "../form/TextInput";
-import DateInput from "../form/DateInput";
-import Textarea from "../form/Textarea";
+import React from "react";
 import styled from "styled-components";
-import { GENRE_OPTIONS } from "../../commons/constants";
+import { useState } from "react";
+import Modal from "./Modal/Base";
+import Select from "./form/Select";
+import TextInput from "./form/TextInput";
+import DateInput from "./form/DateInput";
+import Textarea from "./form/Textarea";
+import { GENRE_OPTIONS } from "../commons/constants";
+import { useNavigate } from "react-router-dom";
 
-export default function MovieForm({ open, onClose, movie }) {
+export default function AddNewMovie() {
+  // Hooks
+  const navigate = useNavigate();
+  // State
+  const [open, setOpen] = useState(true);
 
-  const changeGenre = (selectedGenres) => {
+  const changeGenre = (selectedGenres) => {};
 
-  }
+  const handleReset = () => {};
 
-  const handleReset = () => {
+  const handleSubmit = () => {};
 
-  }
+  const syncData = () => {};
 
-  const handleSubmit = () => {
-
-  }
-
-  const syncData = () => {
-
-  }
-
-  useEffect(() => {
-    if (!open && onClose) {
-      onClose();
-    }
-    if (movie) {
-      syncData(movie);
-    }
-  }, [open, onClose, movie]);
+  const handleClose = () => {
+    setOpen(false);
+    navigate('/');
+  };
 
   return (
-    <Modal open={open} title="Add Movie" data-testid="add-movie-testid">
+    <Modal
+      open={open}
+      onClose={handleClose}
+      title="Add Movie"
+      data-testid="add-movie-testid"
+    >
       <Form className="my-3">
         <TextInput
           name="title"
@@ -82,8 +81,12 @@ export default function MovieForm({ open, onClose, movie }) {
         />
       </Form>
       <div className="flex justify-end">
-        <button className="btn btn-outline mr-3" onClick={handleReset}>reset</button>
-        <button className="btn btn-contained" onClick={handleSubmit}>submit</button>
+        <button className="btn btn-outline mr-3" onClick={handleReset}>
+          reset
+        </button>
+        <button className="btn btn-contained" onClick={handleSubmit}>
+          submit
+        </button>
       </div>
     </Modal>
   );

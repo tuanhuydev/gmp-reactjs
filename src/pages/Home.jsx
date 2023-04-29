@@ -1,21 +1,21 @@
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { EMPTY_STRING, SORT_BY_OPTIONS } from "../commons/constants";
 import styled from "styled-components";
 import SearchMovie from "../components/SearchMovie";
 import HeaderBackground from "../assets/images/header_background.png";
 import { Page } from "../styles/styled/page";
-import { useState } from "react";
-import MovieDetails from "../components/MovieDetails";
 import Logo from "../components/Logo";
 import Footer from "../components/Footer";
 import Select from "../components/form/Select";
-import { DispatchContext, StoreContext } from "../configs/store/context";
-import MovieForm from "../components/Modal/MovieForm";
+import { StoreContext } from "../configs/store/context";
 import Toast from "../components/Modal/Toast";
 import MovieList from "../components/MovieList";
-import { movieAdapter } from "../utils/movieHelpers";
+import withDeeplink from "../components/hocs/WithDeeplink";
+import movieService from "../services/MovieService";
+import { Outlet, useNavigate } from "react-router-dom";
+import { scrollTop0 } from "../utils/domHelpers";
 
-export default function Home() {
+function Home({ search, setSearchParams }) {
   // Context
   const { showModal, showToast } = useContext(StoreContext);
 
@@ -32,57 +32,51 @@ export default function Home() {
   });
 
   // Hooks
-  const dispatch = useContext(DispatchContext);
+  const navigate = useNavigate();
 
   const fetchMovies = useCallback(async (filter) => {
-    let url = new URL("http://localhost:4000/movies");
-    const fetchOptions = {};
-    if (filter) {
-      url = `${url}?${new URLSearchParams(filter)}`;
-    }
-    const response = await fetch(url, fetchOptions);
-    const { data } = await response.json();
-    const movies = data?.length ? movieAdapter(data) : [];
-    console.log(movies);
-    setMovieState((prevState) => ({ ...prevState, movies }));
+    const movies = await movieService.fetchMovies(filter);
+    setMovieState((prevState) => ({
+      ...prevState,
+      movies,
+    }));
   }, []);
 
-  const setSearch = useCallback((search) => {
-    setMovieFilter((filter) => ({ ...filter, search }));
-  }, []);
-
-  const handleSearch = useCallback(
-    (e) => {
-      e.preventDefault();
-      fetchMovies(movieFilter);
+  const setSearch = useCallback(
+    (search) => {
+      setMovieFilter((filter) => ({ ...filter, search }));
+      setSearchParams({ search });
     },
-    [fetchMovies, movieFilter]
+    [setSearchParams]
   );
 
-  const changeSortBy = (value) => {
-    setMovieFilter((prevState) => ({ ...prevState, sortBy: value }));
+  const handleSearch = (e) => {
+    e.preventDefault();
+    fetchMovies();
   };
 
-  const addMovie = useCallback(() => {
-    dispatch({ type: "toggleModal", showModal: !showModal });
-  }, [dispatch, showModal]);
+  const changeSortBy = (option) => {
+    setMovieFilter((prevState) => ({ ...prevState, sortBy: option.value }));
+  };
 
   const selectMovie = (selectedMovie) => {
-    const movieToUpdate = movies.find((movie) => movie.id === selectedMovie.id);
-    if (movieToUpdate) {
-      setMovieState((prevState) => ({ ...prevState, selected: movieToUpdate }));
-    }
+    scrollTop0();
+    navigate(`/${selectedMovie.id}`);
   };
 
+  const addMovie = () => navigate('/new');
+
   useEffect(() => {
-    const timmer = setTimeout(() => {
-      fetchMovies(movieFilter);
-    }, 700);
-    return () => {
-      clearTimeout(timmer);
-    };
+    fetchMovies(movieFilter);
   }, [fetchMovies, movieFilter]);
 
+  useEffect(() => {
+    if (search) {
+      setMovieFilter((prevState) => ({ ...prevState, search }));
+    }
+  }, [search]);
+
+  // filter no change yet
   const { selected, movies } = movieState;
 
   return (
@@ -111,11 +105,10 @@ export default function Home() {
             />
           </div>
         </div>
-        {selected && <MovieDetails movie={selected} />}
+        <Outlet />
         <MovieList movies={movies} onSelect={selectMovie} />
       </div>
       <Footer />
-      <MovieForm open={showModal} />
       <Toast
         open={showToast}
         title="congratulations !"
@@ -142,3 +135,5 @@ const AddButton = styled.button`
   padding: 1rem 2rem;
   border-radius: 0.25rem;
 `;
+
+export default withDeeplink(Home);
