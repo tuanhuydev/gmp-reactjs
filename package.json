@@ -9,6 +9,8 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
     "cypress": "^12.9.0",
+    "express": "^4.18.2",
+    "http": "^0.0.1-security",
     "jest": "^29.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -25,6 +27,7 @@
   "scripts": {
     "start": "react-scripts start",
     "lint:fix": "npx prettier --write .",
+    "start:ssr": "node ./server.js",
     "build": "react-scripts build",
     "cypress": "npx cypress open",
     "test": "jest",
