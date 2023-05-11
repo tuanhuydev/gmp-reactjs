@@ -1,12 +1,8 @@
-import React, { createRef, useCallback, useEffect, useState } from "react";
-import styles from "./styles.module.css";
+import React, { createRef, useCallback, useEffect, useState } from 'react';
+import styles from './styles.module.css';
+import PropTypes from 'prop-types';
 
-const Option = React.memo(function Option({
-  value,
-  label,
-  selected,
-  onSelect,
-}) {
+export const Option = React.memo(function Option({ value, label, selected, onSelect }) {
   const select = useCallback(
     (event) => {
       event.preventDefault();
@@ -17,27 +13,27 @@ const Option = React.memo(function Option({
 
   return (
     <div
-      className={`flex items-center px-2 py-3 cursor-pointer ${styles.option} ${
-        selected ? styles.selected : ""
-      }`}
+      className={`flex items-center px-2 py-3 cursor-pointer ${styles.option} ${selected ? styles.selected : ''}`}
       aria-label={value}
       onClick={select}
     >
-      <input
-        type="checkbox"
-        onChange={select}
-        checked={selected}
-        className="mr-1"
-      />
+      <input type="checkbox" onChange={select} checked={selected} className="mr-1" />
       <span className="grow">{label}</span>
     </div>
   );
 });
 
-export default React.memo(function Select({
+Option.propTypes = {
+  value: PropTypes.any.isRequired,
+  label: PropTypes.string.isRequired,
+  onSelect: PropTypes.func.isRequired,
+  selected: PropTypes.bool,
+};
+
+const Select = React.memo(function Select({
   label,
-  placeholder = "Select",
-  value,
+  placeholder = 'Select',
+  value = null,
   options = [],
   onSelect,
   isMultiple = false,
@@ -99,12 +95,12 @@ export default React.memo(function Select({
       } else {
         // check / un-check
         setSelectState((selectState) => {
-          return optionSelected(newOption)
+          const newState = optionSelected(newOption)
             ? selectState.filter((option) => option.value !== value)
-            : [...new Set([...selectState, newOption])];
+            : [...selectState, newOption];
+          return newState;
         });
       }
-      onSelect(selectState);
     },
     [isMultipleSelect, onSelect, optionSelected, selectState]
   );
@@ -123,23 +119,28 @@ export default React.memo(function Select({
       }
       setSelectState(movieState);
     }
-  }, [isMultiple, options, value]);
+  }, [isMultiple, options]);
+
+  useEffect(() => {
+    if (selectState) {
+      onSelect(selectState);
+    }
+  }, [selectState]);
+
+  // SHOULD DISPLAY PLACEHOLDER
+  // multiple select & selectState has at least 1 item
+  // single select & selectState exist value
+  const showPlaceholder = placeholder && ((isMultiple && !selectState?.length) || !selectState);
 
   return (
     <div className={`relative w-full ${className}`} data-testid="select-testid">
-      {label && (
-        <label className="block text-primary text-lg upper mb-2">{label}</label>
-      )}
+      {label && <label className="block text-primary text-lg upper mb-2">{label}</label>}
       <div className="relative">
-        <div
-          className={`input relative ${styles.select}`}
-          onClick={toggleMenu(true)}
-          onMouseLeave={toggleMenu(false)}
-        >
-          {placeholder && !selectState ? (
+        <div className={`input relative ${styles.select}`} onClick={toggleMenu(true)} onMouseLeave={toggleMenu(false)}>
+          {showPlaceholder ? (
             <span className="text-light">{placeholder}</span>
           ) : isMultipleSelect ? (
-            <span>{selectState.map((option) => option.label).join(",")}</span>
+            <span>{selectState.map((option) => option.label).join(',')}</span>
           ) : (
             <span>{selectState.label}</span>
           )}
@@ -165,3 +166,20 @@ export default React.memo(function Select({
     </div>
   );
 });
+
+Select.propTypes = {
+  label: PropTypes.string,
+  placeholder: PropTypes.string,
+  value: PropTypes.any,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.any.isRequired,
+    })
+  ),
+  onSelect: PropTypes.func.isRequired,
+  isMultiple: PropTypes.bool,
+  className: PropTypes.string,
+};
+
+export default Select;

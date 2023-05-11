@@ -1,33 +1,14 @@
-import React, { useEffect } from "react";
-import styled from "styled-components";
-import { EMPTY_STRING } from "../commons/constants";
-import { useParams } from "react-router-dom";
-import movieService from "../services/MovieService";
-import { useState } from "react";
-import { useCallback } from "react";
-import { memo } from "react";
+import React, { memo } from 'react';
+import styled from 'styled-components';
+import { EMPTY_STRING } from '../commons/constants/global';
+import { Outlet, useLoaderData } from 'react-router-dom';
 
 export default memo(function MovieDetail() {
-  const { movieId } = useParams();
-  const [movie, setMovie] = useState({});
+  // Hooks
+  const movie = useLoaderData();
 
-  const getMovie = useCallback(async (movieId) => {
-    const movie = await movieService.fetchMovie(movieId);
-    if (movie) setMovie(movie);
-  }, []);
+  const { posterPath, title, genres = [], releaseDate, tagline, overview } = movie;
 
-  useEffect(() => {
-    if (movieId) getMovie(movieId);
-  }, [getMovie, movieId]);
-
-  const {
-    posterPath,
-    title,
-    genres = [],
-    releaseDate,
-    tagline,
-    overview,
-  } = movie;
   return (
     <>
       {movie && (
@@ -36,11 +17,7 @@ export default memo(function MovieDetail() {
           <div className="w-half">
             <Tile>{title}</Tile>
             <GenreList>
-              {genres?.length
-                ? genres.map((genre) => (
-                    <GenreItem key={genre}>{genre}</GenreItem>
-                  ))
-                : EMPTY_STRING}
+              {genres?.length ? genres.map((genre) => <GenreItem key={genre}>{genre}</GenreItem>) : EMPTY_STRING}
             </GenreList>
             <div className="flex gap-3">
               <SubTilePrimary>{releaseDate}</SubTilePrimary>
@@ -50,6 +27,7 @@ export default memo(function MovieDetail() {
           </div>
         </Container>
       )}
+      <Outlet />
     </>
   );
 });

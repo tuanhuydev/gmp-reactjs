@@ -1,8 +1,8 @@
-import { useReducer } from "react";
-import { appReducer } from "./configs/reducers/metaReducer";
-import { StoreContext, DispatchContext } from "./configs/store/context";
-import { INITIAL_STORE } from "./commons/constants";
-import AppRouter from "./pages";
+import React, { useReducer } from 'react';
+import { appReducer } from './configs/reducers/metaReducer';
+import { StoreContext, DispatchContext } from './configs/store/context';
+import { INITIAL_STORE } from './commons/constants/global';
+import AppRouter from './pages';
 
 function App() {
   const [data, dispatch] = useReducer(appReducer, INITIAL_STORE);

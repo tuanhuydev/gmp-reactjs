@@ -1,13 +1,13 @@
-import { capitalizeObject, movieAdapter } from "../utils/movieHelpers";
+import { capitalizeObject, movieAdapter } from '../utils/movieHelpers';
 
 class MovieService {
-  baseUrl = "http://localhost:4000/movies";
+  baseUrl = 'http://localhost:4000/movies';
 
   async fetchMovies(filter) {
     const searchQueries = new URLSearchParams(filter);
     const response = await fetch(`${new URL(this.baseUrl)}?${searchQueries}`);
-    const { data = [] } = await response.json();
-    return movieAdapter(data);
+    const { data = [], limit, offset, totalAmount } = await response.json();
+    return { movies: movieAdapter(data), limit, offset, totalAmount };
   }
 
   async fetchMovie(movieId) {

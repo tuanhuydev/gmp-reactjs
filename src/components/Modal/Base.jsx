@@ -1,6 +1,7 @@
-import React, { useRef } from "react";
-import styled from "styled-components";
-import { createPortal } from "react-dom";
+import React, { useRef } from 'react';
+import styled from 'styled-components';
+import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
 
 const Container = styled.div`
   position: absolute;
@@ -39,14 +40,7 @@ const Title = styled.h1`
   font-weight: 400;
 `;
 
-export default function Modal({
-  title,
-  children,
-  open = false,
-  closable = true,
-  onClose,
-  ...restProps
-}) {
+export default function Modal({ title, children, open = false, closable = true, onClose, ...restProps }) {
   const containerRef = useRef();
 
   return (
@@ -75,8 +69,16 @@ export default function Modal({
               {children}
             </Dialog>
           </Container>,
-          document.getElementById("modal")
+          document.getElementById('modal')
         )}
     </div>
   );
 }
+
+Modal.propTypes = {
+  title: PropTypes.string,
+  children: PropTypes.any,
+  open: PropTypes.bool,
+  closable: PropTypes.bool,
+  onClose: PropTypes.func,
+};
