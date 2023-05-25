@@ -1,9 +1,12 @@
 import React from 'react';
-import Textarea from '../commons/Textarea';
+import Textarea, { TextareaProps } from '@/components/commons/Textarea';
 import { Controller } from 'react-hook-form';
-import PropTypes from 'prop-types';
 
-export default function FormTextarea({ name, control, ...restProps }) {
+export interface FormTextareaProps extends Partial<TextareaProps> {
+  control: any;
+}
+
+export default function FormTextarea({ name, control, ...restProps }: FormTextareaProps) {
   return (
     <Controller
       control={control}
@@ -16,8 +19,3 @@ export default function FormTextarea({ name, control, ...restProps }) {
     />
   );
 }
-
-FormTextarea.propTypes = {
-  name: PropTypes.string.isRequired,
-  control: PropTypes.any.isRequired,
-};

@@ -1,8 +1,8 @@
 import React from 'react';
 import styles from './styles.module.css';
-import PropTypes from 'prop-types';
-export default function SearchMovie({ value, onChange, onSearch, placeholder }) {
-  const handleSearch = (event) => {
+
+export default function SearchMovie({ value, onChange, onSearch, placeholder }: any) {
+  const handleSearch = (event: { target: { value: string; }; }) => {
     const value = event.target.value || '';
     onChange(value);
   };
@@ -23,10 +23,3 @@ export default function SearchMovie({ value, onChange, onSearch, placeholder }) 
     </form>
   );
 }
-
-SearchMovie.propTypes = {
-  value: PropTypes.any,
-  onChange: PropTypes.func,
-  onSearch: PropTypes.func,
-  placeholder: PropTypes.string,
-};

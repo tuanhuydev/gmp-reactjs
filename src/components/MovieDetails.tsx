@@ -2,12 +2,13 @@ import React, { memo } from 'react';
 import styled from 'styled-components';
 import { EMPTY_STRING } from '../commons/constants/global';
 import { Outlet, useLoaderData } from 'react-router-dom';
+import { ObjectType } from '@/types/meta';
 
 export default memo(function MovieDetail() {
   // Hooks
   const movie = useLoaderData();
 
-  const { posterPath, title, genres = [], releaseDate, tagline, overview } = movie;
+  const { posterPath, title, genres = [], releaseDate, tagline, overview } = movie as ObjectType;
 
   return (
     <>
@@ -17,7 +18,7 @@ export default memo(function MovieDetail() {
           <div className="w-half">
             <Tile>{title}</Tile>
             <GenreList>
-              {genres?.length ? genres.map((genre) => <GenreItem key={genre}>{genre}</GenreItem>) : EMPTY_STRING}
+              {genres?.length ? genres.map((genre: any) => <GenreItem key={genre}>{genre}</GenreItem>) : EMPTY_STRING}
             </GenreList>
             <div className="flex gap-3">
               <SubTilePrimary>{releaseDate}</SubTilePrimary>

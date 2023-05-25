@@ -1,8 +1,12 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
-import TextInput from '../commons/TextInput';
-import PropTypes from 'prop-types';
-export default function FormText({ name, control, ...restProps }) {
+import TextInput, { TextInputProps } from '../commons/TextInput';
+
+interface FormTextProps extends Partial<TextInputProps> {
+  control: any;
+}
+
+export default function FormText({ name, control, ...restProps }: FormTextProps) {
   return (
     <Controller
       control={control}
@@ -17,8 +21,3 @@ export default function FormText({ name, control, ...restProps }) {
     />
   );
 }
-
-FormText.propTypes = {
-  name: PropTypes.string.isRequired,
-  control: PropTypes.any.isRequired,
-};

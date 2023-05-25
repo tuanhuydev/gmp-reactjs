@@ -1,8 +1,12 @@
 import React from 'react';
-import DateInput from '../commons/DateInput';
+import DateInput, { DateInputProps } from '../commons/DateInput';
 import { Controller } from 'react-hook-form';
-import PropTypes from 'prop-types';
-export default function FormDate({ name, control, ...restProps }) {
+
+export interface FormDateProps extends Partial<DateInputProps> {
+  control: any;
+}
+
+export default function FormDate({ name, control, ...restProps }: FormDateProps) {
   return (
     <Controller
       control={control}
@@ -15,8 +19,3 @@ export default function FormDate({ name, control, ...restProps }) {
     />
   );
 }
-
-FormDate.propTypes = {
-  name: PropTypes.string.isRequired,
-  control: PropTypes.any.isRequired,
-};

@@ -1,13 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { TextareaHTMLAttributes } from 'react';
 import styled from 'styled-components';
 
 const Error = styled.span`
   color: var(--primary);
   width: 100%;
 `;
+export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  label?: string;
+  error?: string;
+}
 
-export default function index({ name, label, error, placeholder, className = '', ...restProps }) {
+export default function index({ name, label, error, placeholder, className = '', ...restProps }: TextareaProps) {
   return (
     <div className={className}>
       {label && (
@@ -20,9 +23,3 @@ export default function index({ name, label, error, placeholder, className = '',
     </div>
   );
 }
-
-index.propTypes = {
-  name: PropTypes.string.isRequired,
-  label: PropTypes.string,
-  error: PropTypes.string,
-};

@@ -1,10 +1,11 @@
 import React, { createRef, useCallback, useEffect, useState } from 'react';
 import styles from './styles.module.css';
-import PropTypes from 'prop-types';
+import { OptionProps, SelectProps } from './type';
 
-export const Option = React.memo(function Option({ value, label, selected, onSelect }) {
+
+export const Option = React.memo(function Option({ value, label, selected, onSelect }: OptionProps) {
   const select = useCallback(
-    (event) => {
+    (event: { preventDefault: () => void; }) => {
       event.preventDefault();
       onSelect(value, label);
     },
@@ -23,13 +24,6 @@ export const Option = React.memo(function Option({ value, label, selected, onSel
   );
 });
 
-Option.propTypes = {
-  value: PropTypes.any.isRequired,
-  label: PropTypes.string.isRequired,
-  onSelect: PropTypes.func.isRequired,
-  selected: PropTypes.bool,
-};
-
 const Select = React.memo(function Select({
   label,
   placeholder = 'Select',
@@ -38,14 +32,14 @@ const Select = React.memo(function Select({
   onSelect,
   isMultiple = false,
   className,
-}) {
+}: SelectProps): JSX.Element {
   // State
   const [selectState, setSelectState] = useState(null); // can be array or single object
 
   const isMultipleSelect = selectState && Array.isArray(selectState);
 
   // Ref
-  const menuRef = createRef(null);
+  const menuRef = createRef<any>();
 
   const toggleMenu = useCallback(
     (isFocus = true) =>
@@ -53,8 +47,8 @@ const Select = React.memo(function Select({
         const menuEl = menuRef.current;
         if (!menuEl) return;
 
-        const menuClasses = menuEl.classList;
-        const menuParentClasses = menuEl.parentNode.firstChild.classList;
+        const menuClasses = (menuEl as HTMLElement).classList;
+        const menuParentClasses = ((menuEl as HTMLElement).parentNode.firstChild as HTMLElement).classList;
 
         // Visibility handle
         menuClasses.remove(styles.visible);
@@ -74,7 +68,7 @@ const Select = React.memo(function Select({
    * - if single state then value
    */
   const optionSelected = useCallback(
-    (option) =>
+    (option: { value: any; }) =>
       isMultipleSelect
         ? selectState.some((item) => item?.value === option?.value)
         : option?.value === selectState?.value,
@@ -88,15 +82,15 @@ const Select = React.memo(function Select({
    * - update state action should trigger callback
    */
   const selectOption = useCallback(
-    (value, label) => {
+    (value: any, label: any) => {
       const newOption = { label, value };
       if (!isMultipleSelect) {
         setSelectState(newOption);
       } else {
         // check / un-check
-        setSelectState((selectState) => {
+        setSelectState((selectState: any[]) => {
           const newState = optionSelected(newOption)
-            ? selectState.filter((option) => option.value !== value)
+            ? selectState.filter((option: { value: any; }) => option.value !== value)
             : [...selectState, newOption];
           return newState;
         });
@@ -110,9 +104,9 @@ const Select = React.memo(function Select({
       // map value
       let movieState;
       if (isMultiple && Array.isArray(value)) {
-        movieState = options.filter(({ value: optionValue }) => value === optionValue);
+        movieState = options.filter(({ value: optionValue }: any) => value === optionValue);
       } else {
-        const selectedOption = options.find((option) => option.value === value);
+        const selectedOption = options.find((option: { value: any; }) => option.value === value);
         if (selectedOption) {
           movieState = selectedOption;
         }
@@ -152,7 +146,7 @@ const Select = React.memo(function Select({
           onMouseEnter={toggleMenu(true)}
           onMouseLeave={toggleMenu(false)}
         >
-          {options.map((option) => (
+          {options.map((option: { label: any; value: any; }) => (
             <Option
               label={option?.label}
               key={option?.value}
@@ -167,19 +161,6 @@ const Select = React.memo(function Select({
   );
 });
 
-Select.propTypes = {
-  label: PropTypes.string,
-  placeholder: PropTypes.string,
-  value: PropTypes.any,
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string.isRequired,
-      value: PropTypes.any.isRequired,
-    })
-  ),
-  onSelect: PropTypes.func.isRequired,
-  isMultiple: PropTypes.bool,
-  className: PropTypes.string,
-};
+
 
 export default Select;
