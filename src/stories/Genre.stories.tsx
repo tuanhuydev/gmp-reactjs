@@ -1,5 +1,5 @@
 import React from 'react';
-import Select from '../components/form/Select';
+import Select from '../components/form/FormSelect';
 
 export default {
   title: 'Select',
@@ -19,7 +19,7 @@ export default {
   },
 };
 
-const Template = (args) => <Select {...args} />;
+const Template = (args: any) => <Select {...args} />;
 
 const genreOptions = [
   { label: 'Crime', value: 'crime' },

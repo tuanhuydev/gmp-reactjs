@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { InputHTMLAttributes } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -6,6 +6,11 @@ const Error = styled.span`
   color: var(--primary);
   width: 100%;
 `;
+
+export interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  error?: any;
+}
 export default function index({
   name,
   label,
@@ -16,7 +21,7 @@ export default function index({
   onBlur,
   value,
   ...restProps
-}) {
+}: TextInputProps) {
   return (
     <div className={className}>
       {label && (
@@ -38,10 +43,10 @@ export default function index({
   );
 }
 
-index.propTypes = {
-  name: PropTypes.string.isRequired,
-  label: PropTypes.string,
-  error: PropTypes.string,
-  onBlur: PropTypes.func,
-  value: PropTypes.any,
-};
+// index.propTypes = {
+//   name: PropTypes.string.isRequired,
+//   label: PropTypes.string,
+//   error: PropTypes.string,
+//   onBlur: PropTypes.func,
+//   value: PropTypes.any,
+// };

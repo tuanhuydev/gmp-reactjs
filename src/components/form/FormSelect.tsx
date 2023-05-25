@@ -2,8 +2,14 @@ import React from 'react';
 import { Controller } from 'react-hook-form';
 import Select from '../commons/Select';
 import PropTypes from 'prop-types';
+import { SelectProps } from '../commons/Select/type';
 
-export default function FormSelect({ name, control, ...restProps }) {
+export interface FormSelectProps extends Partial<SelectProps> {
+  control: any;
+  name: string;
+}
+
+export default function FormSelect({ name, control, ...restProps }: FormSelectProps) {
   return (
     <Controller
       name={name}
@@ -13,7 +19,7 @@ export default function FormSelect({ name, control, ...restProps }) {
         fieldState: { invalid, isTouched, isDirty, error },
         formState,
       }) => {
-        const handleSelect = (values) => onChange(values);
+        const handleSelect = (values: any) => onChange(values);
         return <Select onSelect={handleSelect} value={value} isMultiple {...restProps} />;
       }}
     />

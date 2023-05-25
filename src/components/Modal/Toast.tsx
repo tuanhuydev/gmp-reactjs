@@ -3,7 +3,7 @@ import Modal from './Base';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-export default function Toast({ open = false, title, icon, description }) {
+export default function Toast({ open = false, title, icon, description }: any) {
   return (
     <Modal open={open}>
       <div className="flex flex-col items-center">
