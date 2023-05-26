@@ -40,7 +40,7 @@ const Title = styled.h1`
   font-weight: 400;
 `;
 
-export default function Modal({ title, children, open = false, closable = true, onClose, ...restProps }) {
+export default function Modal({ title, children, open = false, closable = true, onClose, ...restProps }: any) {
   const containerRef = useRef();
 
   return (

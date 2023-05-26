@@ -41,7 +41,7 @@ const Year = styled.span`
   padding: 0.25rem;
 `;
 
-export default function MovieTile({ id, posterPath, title, releaseDate, genres, onClick }) {
+export default function MovieTile({ id, posterPath, title, releaseDate, genres, onClick }: any) {
   const handleClick = () => {
     onClick(id);
   };
@@ -54,7 +54,7 @@ export default function MovieTile({ id, posterPath, title, releaseDate, genres, 
         <Year>{releaseDate.slice(0, 4)}</Year>
       </div>
       <GenreList>
-        {genres?.length ? genres.map((genre) => <GenreItem key={genre}>{genre}</GenreItem>) : EMPTY_STRING}
+        {genres?.length ? genres.map((genre: any) => <GenreItem key={genre}>{genre}</GenreItem>) : EMPTY_STRING}
       </GenreList>
     </Wrapper>
   );

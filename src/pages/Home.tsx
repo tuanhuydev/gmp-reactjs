@@ -1,22 +1,22 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { EMPTY_STRING, SORT_BY_OPTIONS } from '../commons/constants/global';
 import styled from 'styled-components';
-import SearchMovie from '../components/SearchMovie';
 import HeaderBackground from '../assets/images/header_background.png';
 import { Page } from '../styles/styled/page';
-import Logo from '../components/Logo';
-import Footer from '../components/Footer';
-import Select from '../components/commons/Select';
-import { StoreContext } from '../configs/store/context';
-import Toast from '../components/Modal/Toast';
-import MovieList from '../components/MovieList';
-import withDeeplink from '../components/hocs/WithDeeplink';
-import movieService from '../services/MovieService';
+import SearchMovie from '@/components/SearchMovie';
+import Logo from '@/components/Logo';
+import Footer from '@/components/Footer';
+import Select from '@/components/commons/Select';
+import { StoreContext } from '@/configs/store/context';
+import Toast from '@/components/Modal/Toast';
+import MovieList from '@/components/MovieList';
+import withDeeplink from '@/components/hocs/WithDeeplink';
+import movieService from '@/services/MovieService';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { scrollTop0 } from '../utils/domHelpers';
 import PropTypes from 'prop-types';
 
-function Home({ search, setSearchParams }) {
+function Home({ search, setSearchParams }: any): JSX.Element {
   // Context
   const { showToast } = useContext(StoreContext);
 
@@ -39,38 +39,38 @@ function Home({ search, setSearchParams }) {
   const navigate = useNavigate();
 
   const movieFilterHandler = useCallback(
-    (state) => (prevState) => ({
+    (state: any) => (prevState: any) => ({
       ...prevState,
       ...state,
     }),
     []
   );
 
-  const fetchMovies = useCallback(async (filter) => {
+  const fetchMovies = useCallback(async (filter?: any) => {
     const movieState = await movieService.fetchMovies(filter);
     setMovieState((prevState) => ({
       ...prevState,
       ...movieState,
-    }));
+    } as any));
   }, []);
 
   // Filter handlers
   const setSearch = useCallback(
-    (search) => {
+    (search: any) => {
       setMovieFilter(movieFilterHandler({ search }));
       setSearchParams({ search });
     },
     [movieFilterHandler, setSearchParams]
   );
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     fetchMovies();
   };
 
-  const changeSortBy = (option) => setMovieFilter(movieFilterHandler({ sortBy: option.value }));
+  const changeSortBy = (option: { value: any; }) => setMovieFilter(movieFilterHandler({ sortBy: option.value }));
 
-  const selectMovie = (selectedMovie) => {
+  const selectMovie = (selectedMovie: { id: any; }) => {
     scrollTop0();
     navigate(`/${selectedMovie.id}`);
   };
@@ -109,7 +109,7 @@ function Home({ search, setSearchParams }) {
             sort by
           </label>
           <div className="py-3 px-3 grow">
-            <Select options={SORT_BY_OPTIONS} value={SORT_BY_OPTIONS[0].value} onSelect={changeSortBy} />
+            <Select options={SORT_BY_OPTIONS as Array<any>} value={SORT_BY_OPTIONS[0].value} onSelect={changeSortBy} />
           </div>
         </div>
         <Outlet />

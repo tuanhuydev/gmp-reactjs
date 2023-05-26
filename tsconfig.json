@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "esModuleInterop": true,
+        "jsx": "react",
+        "target": "es2015",
+        "downlevelIteration": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ]
+        }
+    }
+}

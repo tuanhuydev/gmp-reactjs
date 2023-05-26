@@ -1,8 +1,13 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
-import TextInput from '../commons/TextInput';
+import TextInput, { TextInputProps } from '../commons/TextInput';
 import PropTypes from 'prop-types';
-export default function FormText({ name, control, ...restProps }) {
+
+interface FormTextProps extends Partial<TextInputProps> {
+  control: any;
+}
+
+export default function FormText({ name, control, ...restProps }: FormTextProps) {
   return (
     <Controller
       control={control}

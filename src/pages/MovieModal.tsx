@@ -4,13 +4,24 @@ import Modal from '../components/Modal/Base';
 import { GENRE_OPTIONS } from '../commons/constants/global';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import FormText from '../components/form/FormText';
-import FormDate from '../components/form/FormDate';
-import FormTextarea from '../components/form/FormTextarea';
-import FormSelect from '../components/form/FormSelect';
-import { httpClient } from '../configs/httpClient';
+import FormText from '@/components/form/FormText';
+import FormDate from '@/components/form/FormDate';
+import FormTextarea from '@/components/form/FormTextarea';
+import FormSelect from '@/components/form/FormSelect';
+import { httpClient } from '@/configs/httpClient';
+import { ObjectType } from '@/types/meta';
 
-const DEFAULT_FORM_VALUES = {
+type FormValuesType = {
+  title: string;
+  releaseDate: Date;
+  posterPath: string;
+  voteAverage: number;
+  genres: Array<string>;
+  runtime: number;
+  overview: string;
+}
+
+const DEFAULT_FORM_VALUES: FormValuesType = {
   title: '',
   releaseDate: new Date(),
   posterPath: '',
@@ -23,7 +34,7 @@ export default function MovieModal() {
   // Hooks
   const navigate = useNavigate();
   // Movie to edit
-  const movie = useLoaderData();
+  const movie: ObjectType = useLoaderData();
 
   const { control, handleSubmit, reset, setValue } = useForm({
     defaultValues: DEFAULT_FORM_VALUES,
@@ -35,10 +46,11 @@ export default function MovieModal() {
       Object.entries(movie).forEach(([key, value]) => {
         if (key in DEFAULT_FORM_VALUES) {
           if (key === 'genres') {
-            const valueOptions = value.map((item) => GENRE_OPTIONS.find((option) => option.value === item));
+            const valueOptions = value.map((item: any) => GENRE_OPTIONS.find((option) => option.value === item));
             setValue('genres', valueOptions);
           } else {
-            setValue(key, value);
+            type FormKey = "title" | "releaseDate" | "posterPath" | "voteAverage" | "genres" | "runtime" | "overview" | `genres.${number}`;
+            setValue(key as FormKey, value);
           }
         }
       });
@@ -48,11 +60,11 @@ export default function MovieModal() {
   // State
   const [open, setOpen] = useState(true);
 
-  const submit = async (formData) => {
+  const submit = async (formData: any) => {
     const { genres = [], voteAverage, runtime, ...restProps } = formData;
     const body = {
       ...restProps,
-      genres: genres.map((genre) => genre.label),
+      genres: genres.map((genre: any) => genre.label),
       voteAverage: +voteAverage,
       runtime: +runtime,
     };
